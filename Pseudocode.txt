@@ -1,0 +1,13 @@
+Def matrixMult(arr,i,j,M):
+        if (i+1==j): return 0
+        if (i+2==j): return (arr[i]*arr[i+1]*arr[i+2])
+        if (M[i][j]  !=-1): return M[i][j] 
+        result = infinity
+        for(k=i+1 to k=j):
+                temp = matrixMult(arr,i,k,M) + matrixMult(arr,k,j,M) + arr[i]*arr[j]*arr[k]
+                if (temp < result): result = temp        
+        M[i][j] = result
+        return result
+
+
+
