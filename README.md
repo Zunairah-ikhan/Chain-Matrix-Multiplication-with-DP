@@ -1,9 +1,9 @@
-# Chain-Matrix-Multiplication-with-DP
+# Chain-Matrix Multiplication with DP
 This is a project created for my Algorithms Course and tackles the problem of Chain-Matrix Multiplication, a classical optimization problem that requires determining the optimal order in which matrices must be multiplied to arrive at the product with the least amount of integer multiplications. The goal is to be as efficient as possible so as to reduce computational cost. 
 
 ## Naïve Algorithm
 The most simple implementation would be plain recursion that would try all possible partitions and for each partition, it would recursively calculate the cost of the remaining brackets. But this means the same subproblem is called again and again resulting in a highly inefficient algorithm that runs in exponential time.  
-We start with the first partition to get our first pair of subproblems. If our input matrices were ABCD then the first partition could be A(BCD) or (AB)(CD) or (ABC)D. In general, if we had n matrices, the first partition could be made in (n-1) ways. 
+ 
 
 ## DP Solution
 Our approach works in a similar way by finding the optimal solution to the subproblems which decides the optimal solution of the whole problem. The difference is that intermediate costs of the subproblems are stored to avoid calculating the same thing again and again. This is the Top-Down approach with recursion and memoization.
@@ -18,15 +18,13 @@ So 〖(A〗_(a×b))(B_(b×c) )=C_(a×c) would be θ(a×b×c)
 This is because the product will have a total of a×c entries where each entry takes b multiplications and (b-1) additions, the latter of which can be ignored. 
 The main idea of the algorithm is calculating the cost of multiplying the matrices in different orders and then selecting the minimum cost.
 
-
+We start with the first partition to get our first pair of subproblems. If our input matrices were ABCD then the first partition could be A(BCD) or (AB)(CD) or (ABC)D. In general, if we had n matrices, the first partition could be made in (n-1) ways.
 
 The functioning of the algorithm can be better illustrated with a small example:
 Say we want to multiply three matrices 〖(A〗_(4×1))(B_(1×2) ) and (C_(2×3)). We have two ways to go about this, either (AB)C or A(BC). 
 Option 1: AB=D_(4×2)=4×1×2=8 & DC=4×2×3=24 i.e., 8+24=32 multiplications
 Option 2: BC=D_(1×3)=1×2×3=6 & AD=4×1×3=12 i.e., 6+12=18 multiplications
 The optimum order with a lower cost in terms of no. of multiplications is Option 2 with a total of 18 multiplications and the sequence of multiplications can be represented by (A(BC)).
-
-
 
 
 ## Pseudocode Analysis
@@ -57,11 +55,6 @@ This will be passed as an array of the form [4,1,2,3] into our function
 arr=[4,1,2,3] 
 n=len(arr)=len([4,1,2,3])=4 
 Our memoization table will be a 4×4 table with all entries -1
-	0	1	2	3
-0	-1	-1	-1	-1
-1	-1	-1	-1	-1
-2	-1	-1	-1	-1
-3	-1	-1	-1	-1
 
 result = ∞
 The first function called will be matrixMult(arr,0,3,M)
@@ -71,19 +64,9 @@ First iteration:
 k=i+1=1 
 left = matrixMult(arr,0,1,M)
 	This is base case 1 and it will return 0
-	0	1	2	3
-0	-1	0	-1	-1
-1	-1	-1	-1	-1
-2	-1	-1	-1	-1
-3	-1	-1	-1	-1
-
+	
 right = matrixMult(arr,1,3,M)
 	This is base case 2 and it will return arr[1]*arr[2]*arr[3]=1*2*3=6
-	0	1	2	3
-0	-1	0	-1	-1
-1	-1	-1	-1	6
-2	-1	-1	-1	-1
-3	-1	-1	-1	-1
 
 temp = left + right + (arr[0]*arr[3]*arr[1]) = 0+6+(4*3*1)=6+12=18
 18<∞ and hence result = 18
@@ -92,28 +75,13 @@ Second iteration:
 k=i+2=2 
 left = matrixMult(arr,0,2,M)
 	This is base case 2 and it will return arr[0]*arr[1]*arr[2]=4*1*2=8
-	0	1	2	3
-0	-1	0	8	-1
-1	-1	-1	-1	6
-2	-1	-1	-1	-1
-3	-1	-1	-1	-1
 
 right = matrixMult(arr,2,3,M)
 	This is base case 1 and it will return 0
-	0	1	2	3
-0	-1	0	8	-1
-1	-1	-1	-1	6
-2	-1	-1	-1	0
-3	-1	-1	-1	-1
 
 temp = left + right + (arr[0]*arr[3]*arr[2]) = 8+0+(4*3*2)=8+24=32
 32<18 is false and hence result remains 18
 We exit the loop and save result to the table at M[0][n-1]
-	0	1	2	3
-0	-1	0	8	18
-1	-1	-1	-1	6
-2	-1	-1	-1	0
-3	-1	-1	-1	-1
 
 The result is returned = 18	
 
